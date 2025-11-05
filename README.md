@@ -8,7 +8,7 @@ A Spring Boot 3.x application to manage **employees** and **persons** with secur
 
 - CRUD operations for **Employees** and **Persons**
 - Authentication & Authorization via **Keycloak**
-- Built with **Java 21** and Spring Boot 3.x
+- Built with **Java 17** and Spring Boot 3.x
 - PostgreSQL database (can be replaced by H2 for testing)
 - RESTful API endpoints
 
