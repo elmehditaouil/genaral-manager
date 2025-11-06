@@ -11,8 +11,9 @@ public interface EmployeeService {
 
      Optional<Employee> getEmployee(Long id);
 
-    Page<Employee> getAllEmployees(Pageable pageable);
-
+     Page<Employee> getAllEmployees(Pageable pageable);
 
      Employee createEmployee(Employee employee);
+
+     void deleteById(Long id);
 }

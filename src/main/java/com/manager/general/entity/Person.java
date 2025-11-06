@@ -19,4 +19,9 @@ public class Person {
     String firstName;
     @Column(name = "last_name")
     String lastName;
+
+    @Transient
+    public String getFullName(){
+        return firstName + " " + lastName;
+    }
 }

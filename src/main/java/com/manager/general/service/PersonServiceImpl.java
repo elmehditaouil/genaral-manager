@@ -3,6 +3,7 @@ package com.manager.general.service;
 import com.manager.general.entity.Employee;
 import com.manager.general.entity.Person;
 import com.manager.general.repository.PersonRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -50,6 +51,7 @@ public class PersonServiceImpl implements PersonService {
      * @return the saved {@link Person} entity
      */
     @Override
+    @Transactional
     public Person saveOrUpdate(Person person) {
         return personRepository.save(person);
     }
@@ -59,6 +61,7 @@ public class PersonServiceImpl implements PersonService {
      *
      * @param id the ID of the person to delete
      */
+    @Transactional
     @Override
     public void deleteById(Long id) {
         personRepository.deleteById(id);

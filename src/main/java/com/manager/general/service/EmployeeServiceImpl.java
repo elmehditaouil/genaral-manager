@@ -2,6 +2,7 @@ package com.manager.general.service;
 
 import com.manager.general.entity.Employee;
 import com.manager.general.repository.EmployeeRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,7 +48,19 @@ public class EmployeeServiceImpl implements EmployeeService {
      * @return the saved {@link Employee} entity
      */
     @Override
+    @Transactional
     public Employee createEmployee(Employee employee) {
         return employeeRepository.save(employee);
+    }
+
+    /**
+     * Deletes a employee by their ID.
+     *
+     * @param id the ID of the person to delete
+     */
+    @Transactional
+    @Override
+    public void deleteById(Long id) {
+        employeeRepository.deleteById(id);
     }
 }

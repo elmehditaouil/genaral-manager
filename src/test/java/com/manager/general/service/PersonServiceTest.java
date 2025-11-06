@@ -1,20 +1,17 @@
 package com.manager.general.service;
 
 import com.manager.general.entity.Person;
-import com.manager.general.exception.PersonNotFoundException;
 import com.manager.general.repository.PersonRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
+import org.springframework.data.domain.*;
 import java.util.List;
 import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,14 +25,21 @@ class PersonServiceTest {
 
     @Test
     void shouldReturnAllPersons() {
+        // given
         Person p1 = new Person(1L, "John", "Doe");
         Person p2 = new Person(2L, "Jane", "Smith");
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("id").ascending());
+        Page<Person> page = new PageImpl<>(List.of(p1, p2), pageable, 2);
 
-        when(personRepository.findAll()).thenReturn(List.of(p1, p2));
+        when(personRepository.findAll(pageable)).thenReturn(page);
 
-        List<Person> persons = personService.findAll();
+        // when
+        Page<Person> persons = personService.getAllPersons(pageable);
 
-        assertThat(persons).hasSize(2).containsExactly(p1, p2);
+        // then
+        assertThat(persons.getContent())
+                .hasSize(2)
+                .containsExactly(p1, p2);
     }
 
     @Test

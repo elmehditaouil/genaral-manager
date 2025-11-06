@@ -2,22 +2,20 @@ package com.manager.general.controller;
 
 
 import com.manager.general.entity.Person;
-import com.manager.general.exception.PersonNotFoundException;
 import com.manager.general.service.PersonService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.data.domain.*;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -33,15 +31,22 @@ class PersonControllerTest {
     @WithMockUser(username = "user", roles = {"USER"})
     @Test
     void shouldReturnAllPersons() throws Exception {
+        // given
         Person p1 = new Person(1L, "mehdi", "taouil");
         Person p2 = new Person(2L, "Jane", "Smith");
-        when(personService.findAll()).thenReturn(List.of(p1, p2));
+        Page<Person> page = new PageImpl<>(List.of(p1, p2));
 
-        mockMvc.perform(get("/api/persons"))
+        when(personService.getAllPersons(any(Pageable.class))).thenReturn(page);
+
+        // when & then
+        mockMvc.perform(get("/api/persons")
+                        .param("page", "0")
+                        .param("size", "10")
+                        .param("sort", "id,asc"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].firstName").value("mehdi"));
+                .andExpect(jsonPath("$.content[0].firstName").value("mehdi"))
+                .andExpect(jsonPath("$.content[1].firstName").value("Jane"));
     }
-
     @WithMockUser(username = "user", roles = {"USER"})
     @Test
     void shouldReturnPersonById() throws Exception {
