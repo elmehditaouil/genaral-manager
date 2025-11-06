@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -65,5 +66,10 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public void deleteById(Long id) {
         personRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Person> findAllPersons(Specification<Person> specification) {
+        return personRepository.findAll(specification);
     }
 }
